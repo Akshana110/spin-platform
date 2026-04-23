@@ -57,3 +57,31 @@ python -m uvicorn main:app --reload
 - Backend now supports dynamic configuration  
 - Spin results follow controlled probability distribution  
 - Foundation ready for database integration and advanced logic  
+
+## 📅 Day 4 – Database Integration
+
+### 🚀 What I Did
+- Integrated **SQLite database** using **SQLAlchemy**
+- Created **User model** (id, name, email)
+- Implemented basic **CRUD APIs (Create & Read)**
+- Used **Pydantic schemas** for validation
+- Added **dependency injection** for DB sessions
+
+
+### 🔌 APIs Added
+- `POST /users/` → Create user  
+- `GET /users/` → Get all users  
+
+### 🧠 Concepts Learned
+- ORM (SQLAlchemy)
+- Models vs Schemas
+- CRUD operations
+- Dependency Injection (`Depends`)
+- Database session handling
+
+
+### ⚠️ Note
+- Wheel data is still stored in memory (not in DB)
+
+### 🎯 Summary
+Integrated database with FastAPI and built basic CRUD functionality.

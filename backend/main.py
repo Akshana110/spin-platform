@@ -1,12 +1,34 @@
-from pydantic import BaseModel
-from fastapi import FastAPI
-import random
+from fastapi import FastAPI, Depends
+from sqlalchemy.orm import Session
+import models, schemas
+from database import engine, SessionLocal
+
+models.base.metadata.create_all(bind=engine)
 
 app = FastAPI(
     title="Spin Wheel API",
     description="backend for spin wheel game",
     version="1.0"
 )
+# Dependency
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
+
+@app.post("/users/", response_model=schemas.UserResponse)
+def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
+    db_user = models.User(name=user.name, email=user.email)
+    db.add(db_user)
+    db.commit()
+    db.refresh(db_user)
+    return db_user
+
+@app.get("/users/")
+def get_users(db: Session = Depends(get_db)):
+    return db.query(models.User).all()
 
 wheel_data = [
     {"label": "100", "weight": 1},
@@ -18,8 +40,8 @@ wheel_data = [
 ]
 
 class WheelItem(BaseModel):
-    label : str
-    weight: float
+    label : str = Field(..., min_lenght=1)
+    weight: float = Field(..., gt=0)
 
 @app.get("/options")
 def get_options():
